@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>KPI 目标检查</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      background: #f7f7f7;
+      padding: 40px;
+    }
+    .card {
+      max-width: 520px;
+      margin: auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    h2 { margin-top: 0; }
+    .row { margin: 16px 0; }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background: #1677ff;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    .tip {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+    .log {
+      margin-top: 12px;
+      font-size: 13px;
+      white-space: pre-wrap;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>KPI 目标检查</h2>
+  <div class="tip">
+    请选择 Excel 文件并上传，系统会自动生成检查结果并下载。
+  </div>
+
+  <!-- 核心：form 直传，绕过 CORS -->
+  <form id="form"
+        action="https://n8n.300624.cn/webhook/kpi-check"
+        method="post"
+        enctype="multipart/form-data"
+        target="_blank">
+
+    <div class="row">
+      <input type="file"
+             name="file"
+             accept=".xlsx,.xls"
+             required />
+    </div>
+
+    <div class="row">
+      <button id="btn" type="submit">上传并生成结果</button>
+    </div>
+  </form>
+
+  <div id="log" class="log">等待上传…</div>
+</div>
+
+<script>
+  const btn = document.getElementById("btn");
+  const log = document.getElementById("log");
+  const form = document.getElementById("form");
+
+  form.addEventListener("submit", () => {
+    btn.disabled = true;
+    log.textContent =
+      "文件已提交。\n" +
+      "如果工作流已激活，浏览器会自动下载 Excel。\n\n" +
+      "若未下载，请检查：\n" +
+      "1. n8n 工作流是否 Activated\n" +
+      "2. 是否使用 Production Webhook URL";
+    setTimeout(() => btn.disabled = false, 3000);
+  });
+</script>
+
+</body>
+</html>
